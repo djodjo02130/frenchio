@@ -8,6 +8,7 @@ Addon Stremio pour les trackers torrent francais prives/semi-prives.
 - Services debrid: AllDebrid, TorBox, Debrid-Link
 - Support qBittorrent pour le streaming direct
 - Interface de configuration web
+- Score securite: 8/8
 
 ## Configuration
 
@@ -15,7 +16,6 @@ Addon Stremio pour les trackers torrent francais prives/semi-prives.
 
 | Option | Description | Defaut |
 |--------|-------------|--------|
-| `PORT` | Port de l'interface web | 7777 |
 | `QBITTORRENT_ENABLE` | Activer le support qBittorrent | true |
 | `MANIFEST_TITLE_SUFFIX` | Suffixe du titre (ex: "\| MonServeur") | |
 | `MANIFEST_BLURB` | Message HTML personnalise | |
@@ -28,7 +28,7 @@ Addon Stremio pour les trackers torrent francais prives/semi-prives.
 La configuration des trackers et cles API se fait via l'interface web:
 
 1. Demarrez l'addon
-2. Accedez a `http://votre-ha:7777/configure`
+2. Cliquez sur **Ouvrir l'interface web** dans Home Assistant
 3. Configurez:
    - Cle API TMDB (obligatoire, gratuite sur themoviedb.org)
    - Vos comptes trackers (YGG, Sharewood, etc.)
