@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.7 (2025-02-04)
+
+- Deplacement CHANGELOG dans le dossier addon
+
 ## 1.0.6 (2025-02-04)
 
 - Mise a jour documentation

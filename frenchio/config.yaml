@@ -1,6 +1,6 @@
 name: "Frenchio"
 description: "Stremio addon for French private trackers (YGG, Sharewood, ABNormal, etc.)"
-version: "1.0.6"
+version: "1.0.7"
 slug: "frenchio"
 url: "https://github.com/djodjo02130/frenchio"
 arch:

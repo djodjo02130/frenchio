@@ -58,7 +58,7 @@ Quand une mise a jour est detectee:
 
 ## Changelog
 
-Voir [CHANGELOG.md](CHANGELOG.md) pour l'historique des versions.
+Voir [CHANGELOG.md](frenchio/CHANGELOG.md) pour l'historique des versions.
 
 ## Credits
 
