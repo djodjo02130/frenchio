@@ -1,0 +1,47 @@
+# Ajoute ceci dans ton configuration.yaml Home Assistant
+
+sensor:
+  - platform: rest
+    name: Frenchio Latest Commit
+    resource: https://api.github.com/repos/aymene69/frenchio/commits/main
+    value_template: "{{ value_json.sha[:7] }}"
+    json_attributes:
+      - commit
+    scan_interval: 3600  # Vérifie toutes les heures
+    headers:
+      Accept: application/vnd.github.v3+json
+
+# Template sensor pour afficher la date du dernier commit
+template:
+  - sensor:
+      - name: "Frenchio Last Update"
+        state: "{{ state_attr('sensor.frenchio_latest_commit', 'commit').message.split('\n')[0][:50] }}"
+        attributes:
+          date: "{{ state_attr('sensor.frenchio_latest_commit', 'commit').author.date }}"
+          sha: "{{ states('sensor.frenchio_latest_commit') }}"
+
+# Automation pour notification
+automation:
+  - alias: "Frenchio Update Available"
+    trigger:
+      - platform: state
+        entity_id: sensor.frenchio_latest_commit
+    condition:
+      - condition: template
+        value_template: "{{ trigger.from_state.state not in ['unknown', 'unavailable'] }}"
+    action:
+      - service: persistent_notification.create
+        data:
+          title: "Mise à jour Frenchio disponible"
+          message: >
+            Une nouvelle version de Frenchio est disponible!
+
+            Commit: {{ states('sensor.frenchio_latest_commit') }}
+            Message: {{ state_attr('sensor.frenchio_latest_commit', 'commit').message.split('\n')[0] }}
+
+            Mets à jour ton addon Home Assistant.
+          notification_id: frenchio_update
+      - service: notify.notify  # Change par ton service de notification
+        data:
+          title: "Frenchio Update"
+          message: "Nouvelle version disponible! Commit: {{ states('sensor.frenchio_latest_commit') }}"
