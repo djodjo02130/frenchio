@@ -8,7 +8,7 @@ Addon Home Assistant pour [Frenchio](https://github.com/aymene69/frenchio) - un 
 
 1. Cliquez sur le badge ci-dessus ou ajoutez ce repository manuellement:
    - Allez dans **Parametres** > **Modules complementaires** > **Boutique des modules complementaires**
-   - Cliquez sur le menu **:** > **Depots**
+   - Cliquez sur le menu > **Depots**
    - Ajoutez: `https://github.com/djodjo02130/frenchio`
 
 2. Installez l'addon **Frenchio**
@@ -23,26 +23,24 @@ Addon Home Assistant pour [Frenchio](https://github.com/aymene69/frenchio) - un 
 - **Services Debrid**: AllDebrid, TorBox, Debrid-Link
 - **Streaming direct** via qBittorrent
 
-## Notifications de mise a jour
+## Mises a jour automatiques
 
-Ce repo surveille automatiquement les mises a jour du projet Frenchio original.
+Ce repo surveille automatiquement le projet Frenchio original (toutes les 6 heures).
 
-### Option 1: Issues GitHub (automatique)
+Quand une mise a jour est detectee:
+1. La version de l'addon est incrementee automatiquement
+2. Home Assistant affiche "Mise a jour disponible" dans les modules complementaires
+3. Tu peux mettre a jour en un clic
 
-Une issue est creee automatiquement quand une mise a jour est disponible. Activez les notifications GitHub pour ce repo.
-
-### Option 2: Notification Home Assistant
-
-Ajoutez le contenu de [`homeassistant/configuration.yaml.example`](homeassistant/configuration.yaml.example) dans votre configuration Home Assistant pour recevoir des notifications directement.
-
-### Option 3: Webhook Home Assistant
-
-1. Creez une automation webhook dans Home Assistant
-2. Ajoutez l'URL du webhook comme variable `HA_WEBHOOK_URL` dans les secrets de ce repo GitHub
+Aucune configuration necessaire - c'est le systeme natif de Home Assistant.
 
 ## Configuration
 
 Voir la [documentation complete](frenchio/DOCS.md) pour les options de configuration.
+
+## Changelog
+
+Voir [CHANGELOG.md](CHANGELOG.md) pour l'historique des versions.
 
 ## Credits
 

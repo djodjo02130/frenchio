@@ -1,12 +1,12 @@
-name: Check Upstream Updates
+name: Check Upstream & Auto Update
 
 on:
   schedule:
     - cron: '0 */6 * * *'  # Toutes les 6 heures
-  workflow_dispatch:  # Permet le déclenchement manuel
+  workflow_dispatch:
 
 jobs:
-  check-update:
+  check-and-update:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -16,76 +16,67 @@ jobs:
         id: upstream
         run: |
           UPSTREAM_SHA=$(curl -s https://api.github.com/repos/aymene69/frenchio/commits/main | jq -r '.sha')
+          UPSTREAM_SHORT=$(echo $UPSTREAM_SHA | cut -c1-7)
           UPSTREAM_MSG=$(curl -s https://api.github.com/repos/aymene69/frenchio/commits/main | jq -r '.commit.message' | head -1)
           UPSTREAM_DATE=$(curl -s https://api.github.com/repos/aymene69/frenchio/commits/main | jq -r '.commit.author.date')
           echo "sha=${UPSTREAM_SHA}" >> $GITHUB_OUTPUT
+          echo "short=${UPSTREAM_SHORT}" >> $GITHUB_OUTPUT
           echo "message=${UPSTREAM_MSG}" >> $GITHUB_OUTPUT
           echo "date=${UPSTREAM_DATE}" >> $GITHUB_OUTPUT
 
-      - name: Check last known commit
+      - name: Check if update needed
         id: check
         run: |
-          if [ -f .upstream-version ]; then
-            LAST_SHA=$(cat .upstream-version)
-          else
-            LAST_SHA=""
-          fi
-          echo "last_sha=${LAST_SHA}" >> $GITHUB_OUTPUT
+          LAST_SHA=$(cat .upstream-version 2>/dev/null || echo "")
           if [ "$LAST_SHA" != "${{ steps.upstream.outputs.sha }}" ]; then
             echo "updated=true" >> $GITHUB_OUTPUT
           else
             echo "updated=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Update version file
+      - name: Bump addon version
         if: steps.check.outputs.updated == 'true'
         run: |
+          # Get current version
+          CURRENT_VERSION=$(grep '^version:' frenchio/config.yaml | sed 's/version: *"//' | sed 's/"//')
+          echo "Current version: $CURRENT_VERSION"
+
+          # Parse version parts
+          MAJOR=$(echo $CURRENT_VERSION | cut -d. -f1)
+          MINOR=$(echo $CURRENT_VERSION | cut -d. -f2)
+          PATCH=$(echo $CURRENT_VERSION | cut -d. -f3)
+
+          # Bump patch version
+          NEW_PATCH=$((PATCH + 1))
+          NEW_VERSION="${MAJOR}.${MINOR}.${NEW_PATCH}"
+          echo "New version: $NEW_VERSION"
+
+          # Update config.yaml
+          sed -i "s/^version: .*/version: \"${NEW_VERSION}\"/" frenchio/config.yaml
+
+          # Save new upstream SHA
           echo "${{ steps.upstream.outputs.sha }}" > .upstream-version
+
+          # Update CHANGELOG
+          DATE=$(date +%Y-%m-%d)
+          CHANGELOG_ENTRY="## ${NEW_VERSION} (${DATE})\n\n- Sync with upstream frenchio\n- Upstream commit: ${{ steps.upstream.outputs.short }}\n- ${{ steps.upstream.outputs.message }}\n"
+
+          if [ -f CHANGELOG.md ]; then
+            sed -i "2i\\${CHANGELOG_ENTRY}" CHANGELOG.md
+          else
+            echo -e "# Changelog\n\n${CHANGELOG_ENTRY}" > CHANGELOG.md
+          fi
+
+          echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Commit and push
+        if: steps.check.outputs.updated == 'true'
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .upstream-version
-          git commit -m "chore: track upstream version ${{ steps.upstream.outputs.sha }}"
+          git add .
+          git commit -m "chore: bump to v$(grep '^version:' frenchio/config.yaml | sed 's/version: *"//' | sed 's/"//')
+
+Upstream: ${{ steps.upstream.outputs.short }}
+${{ steps.upstream.outputs.message }}"
           git push
-
-      - name: Create issue for update
-        if: steps.check.outputs.updated == 'true'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const issues = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open',
-              labels: 'upstream-update'
-            });
-
-            // Ferme les anciennes issues
-            for (const issue of issues.data) {
-              await github.rest.issues.update({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issue.number,
-                state: 'closed'
-              });
-            }
-
-            // Crée une nouvelle issue
-            await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: '🔄 Mise à jour Frenchio disponible',
-              body: `Une nouvelle version de Frenchio est disponible!\n\n**Commit:** \`${{ steps.upstream.outputs.sha }}\`\n**Message:** ${{ steps.upstream.outputs.message }}\n**Date:** ${{ steps.upstream.outputs.date }}\n\n**Upstream:** https://github.com/aymene69/frenchio/commit/${{ steps.upstream.outputs.sha }}\n\n---\nPour mettre à jour l'addon, rebuild le container ou attendez le prochain build automatique.`,
-              labels: ['upstream-update']
-            });
-
-      - name: Send webhook to Home Assistant (optional)
-        if: steps.check.outputs.updated == 'true' && vars.HA_WEBHOOK_URL != ''
-        run: |
-          curl -X POST "${{ vars.HA_WEBHOOK_URL }}" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "title": "Frenchio Update",
-              "message": "Nouvelle version disponible: ${{ steps.upstream.outputs.sha }}",
-              "commit": "${{ steps.upstream.outputs.sha }}",
-              "commit_message": "${{ steps.upstream.outputs.message }}"
-            }'
