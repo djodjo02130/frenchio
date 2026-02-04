@@ -1,8 +1,8 @@
 #!/usr/bin/with-contenv bashio
 set -e
 
-# Read configuration from Home Assistant
-export PORT=$(bashio::config 'PORT')
+# Fixed port for ingress compatibility
+export PORT=7777
 export QBITTORRENT_ENABLE=$(bashio::config 'QBITTORRENT_ENABLE')
 
 if bashio::config.has_value 'MANIFEST_TITLE_SUFFIX'; then
