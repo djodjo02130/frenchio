@@ -1,6 +1,6 @@
 name: "Frenchio"
 description: "Stremio addon for French private trackers (YGG, Sharewood, ABNormal, etc.)"
-version: "1.0.1"
+version: "1.0.2"
 slug: "frenchio"
 url: "https://github.com/djodjo02130/frenchio"
 arch:
@@ -20,7 +20,7 @@ options:
   QBITTORRENT_PORT: 8080
 schema:
   PORT: port
-  TMDB_API_KEY: password?
+  TMDB_API_KEY: password
   ALLDEBRID_API_KEY: password?
   TORBOX_API_KEY: password?
   DEBRIDLINK_API_KEY: password?

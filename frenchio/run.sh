@@ -3,10 +3,7 @@ set -e
 
 # Read configuration from Home Assistant
 export PORT=$(bashio::config 'PORT')
-
-if bashio::config.has_value 'TMDB_API_KEY'; then
-    export TMDB_API_KEY=$(bashio::config 'TMDB_API_KEY')
-fi
+export TMDB_API_KEY=$(bashio::config 'TMDB_API_KEY')
 
 if bashio::config.has_value 'ALLDEBRID_API_KEY'; then
     export ALLDEBRID_API_KEY=$(bashio::config 'ALLDEBRID_API_KEY')
