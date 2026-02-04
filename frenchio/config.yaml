@@ -1,6 +1,6 @@
 name: "Frenchio"
 description: "Stremio addon for French private trackers (YGG, Sharewood, ABNormal, etc.)"
-version: "1.0.4"
+version: "1.0.5"
 slug: "frenchio"
 url: "https://github.com/djodjo02130/frenchio"
 arch:
@@ -8,8 +8,6 @@ arch:
   - aarch64
   - armv7
 init: false
-homeassistant_api: false
-host_network: true
 ingress: true
 ingress_port: 7777
 panel_icon: "mdi:movie-search"
@@ -28,7 +26,3 @@ schema:
   HTTP_PROXY: str?
   HTTPS_PROXY: str?
   NO_PROXY: str?
-ports:
-  7777/tcp: 7777
-ports_description:
-  7777/tcp: "Frenchio Web Interface"
