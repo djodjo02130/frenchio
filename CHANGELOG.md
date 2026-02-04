@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.6 (2025-02-04)
+
+- Mise a jour documentation
+
 ## 1.0.5 (2025-02-04)
 
 - Amelioration du score de securite a 8/8
