@@ -1,8 +1,8 @@
 #!/usr/bin/with-contenv bashio
 set -e
 
-# Fixed port for ingress compatibility
-export PORT=7777
+# Read port from addon config
+export PORT=$(bashio::config 'PORT')
 export QBITTORRENT_ENABLE=$(bashio::config 'QBITTORRENT_ENABLE')
 
 if bashio::config.has_value 'MANIFEST_TITLE_SUFFIX'; then

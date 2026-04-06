@@ -13,6 +13,7 @@ ingress_port: 7777
 panel_icon: "mdi:movie-search"
 panel_title: "Frenchio"
 options:
+  PORT: 7777
   QBITTORRENT_ENABLE: true
   MANIFEST_TITLE_SUFFIX: ""
   MANIFEST_BLURB: ""
@@ -20,6 +21,7 @@ options:
   HTTPS_PROXY: ""
   NO_PROXY: ""
 schema:
+  PORT: "port"
   QBITTORRENT_ENABLE: bool
   MANIFEST_TITLE_SUFFIX: str?
   MANIFEST_BLURB: str?
