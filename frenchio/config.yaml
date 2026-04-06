@@ -10,6 +10,11 @@ arch:
 init: false
 ingress: true
 ingress_port: 7777
+ports:
+  7777/tcp: 7777
+ports_description:
+  7777/tcp: "Frenchio web interface"
+host_network: true
 panel_icon: "mdi:movie-search"
 panel_title: "Frenchio"
 options:
