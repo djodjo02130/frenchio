@@ -1,4 +1,10 @@
 # Changelog
+## 1.0.14 (2026-04-13)
+
+- Sync with upstream frenchio
+- Upstream commit: 3c440c1
+- feat: mediaflow support
+
 ## 1.0.13 (2026-04-13)
 
 - Sync with upstream frenchio
