@@ -1,4 +1,10 @@
 # Changelog
+## 1.0.13 (2026-04-13)
+
+- Sync with upstream frenchio
+- Upstream commit: null
+- null
+
 ## 1.0.12 (2026-04-10)
 
 - Sync with upstream frenchio
